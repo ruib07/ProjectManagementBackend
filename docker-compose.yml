@@ -1,0 +1,26 @@
+version: '3.4'
+
+networks:
+    myAppNetwork:  
+
+services:
+  SqlServerDb:
+        container_name: SqlServerContainer
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        ports:
+            - 8002:1433
+        environment:
+            - ACCEPT_EULA=Y
+            - MSSQL_SA_PASSWORD=123RuiBarreto456
+
+  projectmanagementapi:
+    container_name: ProjectManagementContainer
+    image: ${DOCKER_REGISTRY-}projectmanagementapi
+    ports:
+            - 8001:80 
+
+    build:
+      context: .
+      dockerfile: ProjectManagementAPI/Dockerfile
+    depends_on:
+            - SqlServerDb
